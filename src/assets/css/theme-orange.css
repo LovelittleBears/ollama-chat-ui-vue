@@ -1,0 +1,89 @@
+html[data-theme='orange'] {
+  /* text */
+  --text-primary: #00240e;
+  --text-secondary: #291b00;
+  --text-tertiary: #1f0909;
+  --text-grey: rgb(80, 80, 80);
+  --text-01: #241c00;
+  --text-02: #553e00;
+  --text-03: #7a5d00;
+  /* link */
+  --text-link: #003a8a;
+  --text-link-hover: #0055aa;
+  --text-visited: #551a8b;
+  /* bgc */
+  --bgc-primary: #ebe8e3;
+  --bgc-secondary: #f1e7d8;
+  --bgc-tertiary: #d2e1e2;
+  --bgc-01: #E3D6A9;
+  --bgc-02: #f2eede;
+  --bgc-03: #f5f1e7;
+  --bgc-04: #f1eadb;
+  --btn-bgc: #ece5cf;
+  --btn-hover: #e8d8c6;
+  --btn-active: #e4ccaf;
+  /* border */
+  --border-primary: #c6bba1;
+  --border-secondary: #9e917e;
+  /* icon */
+  --icon-bgc: #976a2b;
+  --icon-hover-bgc: #d2c9b2;
+  --icon-ctn-hover-bgc: #d2c9b2;
+  /* code */
+  --bgc-pre: #2c2d2e;
+  --bgc-code: #ebe7dd;
+  --text-code: #EBDBA4;
+  /* menu bar */
+  --site-menu-bgc: #e8e3cf;
+  --side-menu-item-tc: rgb(84, 80, 72);
+  --side-item-hover-bgc: rgb(228, 233, 196);
+  --side-item-hover-tc: rgb(72, 81, 84);
+  --side-item-active-bgc: rgb(233, 246, 210);
+  --side-item-active-tc: rgb(67, 51, 0);
+
+  --title-tc-01: #472c01;
+  --subtitle-tc-01: #423600;
+
+  --view-bgc-01: #ebe8d6;
+  --view-bgc-02: #eee9dd;
+  --view-bgc-03: #79683a8d;
+
+  --shadow-01: #3b2e0181;
+  --shadow-02: #674b26ab;
+  --shadow-03: #453b2888;
+
+  --bg-img-01: url('@/assets/svg/banner-04.svg');
+  /* --bg-img-02: url('@/assets/svg/site-bg.svg'); */
+
+  --linear-01: linear-gradient(270deg, #ac9d84 0%, #dedcbf 50%, #ac9d84 100%);
+  --linear-02: linear-gradient(90deg, #ebe2d5 0.00%, #E3D6A9 20.00%, #ebe5d5 100.00%);
+  --linear-03: linear-gradient(132deg, #ebe7d5 0.00%, #E3D6A9 100.00%);
+
+  --banner-linear: linear-gradient(90deg, #9a9274 1%, #ada178 1% 6%, #c4c294 6% 11%,
+      #dfe0cb 11% 89%, #c4c294 89% 94%, #ada178 94% 99%, #9a9274 99%);
+
+  --chat-bot-msg-bgc: #f6f3ea;
+  --chat-usr-msg-bgc: #f2f6ea;
+  --chat-left-panel-bgc: #f2eddf;
+  --chat-panel-bgc: #f9f7ee;
+  --chat-input-bgc: #f3efe3;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  /* background: var(--scroll-track); */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a19888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #968967;
+}

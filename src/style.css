@@ -1,0 +1,21 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "zihun";
+  src: url("./assets/font/zihun.ttf");
+}
+@font-face {
+  font-family: "zihun2";
+  src: url("./assets/font/zihun2.ttf");
+}
+@font-face {
+  font-family: "wryh";
+  src: url("./assets/font/wryh.ttf");
+}
+body{
+  font-family: "wryh",Arial,Helvetica,sans-serif,"宋体";
+}

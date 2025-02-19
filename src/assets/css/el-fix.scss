@@ -1,0 +1,30 @@
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+  background-color: var(--btn-bgc) !important; //修改默认的背景色
+  border: 1px solid var(--border-secondary) !important;
+  color: var(--text-02);
+}
+
+.pagination-container>div>button,
+.pagination-container > div > ul > li {
+  color: var(--text-02);
+  border: 1px solid var(--border-secondary) !important;
+}
+
+.pagination-container>div>button {
+  background-color: var(--bgc-04) !important;
+}
+
+.pagination-container > div > ul > li {
+  background-color: var(--bgc-02) !important;
+}
+
+.el-select__wrapper {
+  background-color: var(--bgc-02);
+  border: 1px solid var(--border-primary) !important;
+  border-radius: 2px;
+  box-shadow: none;
+
+  &:hover {
+    box-shadow: none;
+  }
+}

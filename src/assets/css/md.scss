@@ -1,0 +1,273 @@
+@import 'highlightjs/styles/gruvbox-dark.css';
+// 自定义 markdown 样式
+
+$pfx : #009152;
+
+.x-heading {
+  margin: 25px 0 20px 0;
+  color: var(--text-01);
+  font-family: "PT Serif", 'Times New Roman', Times, serif;
+}
+
+.x-h1 {
+  font-size: 2rem;
+  line-height: 1.6em;
+  border-bottom: 1px solid var(--border-secondary);
+
+  &::before {
+    content: '#';
+    font-size: 1rem;
+    color: $pfx;
+    margin-right: 5px;
+  }
+}
+
+.x-h2 {
+  font-size: 1.75rem;
+
+  &::before {
+    content: '##';
+    font-size: 1rem;
+    color: $pfx;
+    margin-right: 5px;
+  }
+}
+
+.x-h3 {
+  font-size: 1.5rem;
+
+  &::before {
+    content: '#3';
+    font-size: 1rem;
+    color: $pfx;
+    margin-right: 5px;
+  }
+}
+
+.x-h4 {
+  font-size: 1.25rem;
+
+  &::before {
+    content: '#4';
+    font-size: 1rem;
+    color: $pfx;
+    margin-right: 5px;
+  }
+}
+
+.x-h5 {
+  font-size: 1rem;
+
+  &::before {
+    content: '#5';
+    font-size: 1rem;
+    color: $pfx;
+    margin-right: 5px;
+  }
+}
+
+.x-table {
+  overflow: scroll;
+  border-collapse: collapse;
+  margin: 1em 0;
+  display: block;
+
+  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: var(--bgc-01);
+  }
+
+  td,
+  th {
+    border: 1px solid var(--border-primary);
+    padding: 8px;
+  }
+
+  tr:nth-child(odd) {
+    background-color: var(--bgc-03);
+  }
+
+  tr:hover {
+    background-color: var(--bgc-02);
+  }
+}
+
+.x-p {
+  // line-height: 2em;
+}
+
+.x-em,
+.x-strong {}
+
+.x-ul,
+.x-ol {
+  margin: 1em 0 1em 4em;
+  line-height: 1.8em;
+}
+
+.x-ul {
+  list-style-type: disc;
+}
+
+.x-ol {
+  list-style-type: decimal;
+}
+
+.x-li {
+  margin: .5em 0;
+}
+
+.x-pre {
+  background-color: var(--bgc-pre) !important;
+  border-radius: 3px;
+  padding: 0.5em;
+  margin: 1em 0;
+}
+
+// 单行代码块
+.x-code:not(.x-pre .x-code) {
+  background-color: var(--bgc-code) !important;
+  border: 1px solid var(--border-secondary);
+  border-radius: 1px;
+  padding: 0 0.25em;
+  margin: 1em .25em;
+  text-overflow: ellipsis;
+}
+
+.x-blockquote {
+  margin: 10px 0;
+  margin-left: 2em;
+  padding-left: 1em;
+  border-left: 5px solid #006036;
+}
+
+.x-a {
+  padding: 0 2px;
+  color: rgb(0, 160, 160);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.x-hr {
+  border: 0;
+  padding: 3px;
+  margin: 1em;
+  background: repeating-linear-gradient(135deg, #a2a9b6 0px, #a2a9b6 1px, transparent 1px, transparent 6px);
+}
+
+.x-img {
+  display: block;
+  max-width: 80%;
+  margin: 15px auto 20px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+pre,
+code {
+  font-family: Consolas, Menlo, Monaco, Liberation Mono, Lucida Console, monospace;
+  tab-size: 2;
+}
+
+pre.hljs {
+  padding: 18px 0 10px 40px;
+  position: relative;
+  font-size: 14px;
+  line-height: 22px;
+
+  code {
+    display: block;
+    margin: 0 5px 0 10px;
+    overflow-x: auto;
+  }
+
+  .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 18px;
+    bottom: 15px;
+    left: 0;
+    font-size: 100%;
+    width: 40px;
+    text-align: center;
+    letter-spacing: -1px;
+    border-right: 1px solid var(--border-secondary);
+    user-select: none;
+    counter-reset: ln;
+
+    span {
+      pointer-events: none;
+      display: block;
+      counter-increment: ln;
+
+      &:before {
+        content: counter(ln);
+        color: #999;
+        display: block;
+        text-align: center;
+      }
+    }
+  }
+
+  b.code-lang {
+    position: absolute;
+    top: 2px;
+    right: 25px;
+    color: #999;
+    pointer-events: none;
+  }
+
+  &:hover .copy-action,
+  &:hover .ln-action {
+    opacity: 1;
+  }
+
+  .ln-action,
+  .copy-action {
+    position: absolute;
+    top: 2px;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity .3s linear;
+
+    @media screen and (max-width: 768px) {
+      opacity: 1;
+    }
+  }
+
+  .ln-action {
+    left: 5px;
+  }
+
+  .copy-action {
+    right: 2px;
+  }
+
+  .icon-ln,
+  .icon-copy {
+    mask-repeat: no-repeat;
+    mask-position: center;
+    display: inline-block;
+    background-color: var(--icon-bgc);
+    transition: background-color .3s linear;
+
+    &:hover {
+      background-color: var(--icon-hover-bgc);
+    }
+  }
+
+  .icon-ln {
+    width: 18px;
+    height: 18px;
+    mask-image: url('@/assets/svg/list-numbers.svg');
+  }
+
+  .icon-copy {
+    width: 20px;
+    height: 20px;
+    mask-image: url('@/assets/svg/select.svg');
+  }
+}

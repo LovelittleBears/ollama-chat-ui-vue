@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  margin: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
+}

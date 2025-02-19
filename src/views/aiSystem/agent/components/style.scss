@@ -1,0 +1,51 @@
+.pop-window-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2em;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 2rem;
+    color: #000;
+  }
+}
+
+.pop-window-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .label {
+    font-size: 1.2rem;    
+    color: #000;
+
+    .desc {
+      font-size: 0.8rem;
+      color: #979797;
+    }
+  }
+
+  .form-btn {
+    display: flex;
+    margin-top: auto;
+    justify-content: flex-end !important;
+  }
+
+  input {
+    outline: none;
+    padding: 4px 11px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #444c3f;
+    border: 1px solid #9cb294;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+}
+
+.pop-window-footer {
+  display: flex;
+  justify-content: end;
+}

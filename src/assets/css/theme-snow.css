@@ -1,0 +1,84 @@
+html[data-theme='snow'] {
+  /* text */
+  --text-01: #241c00;
+  --text-02: #545454;
+  --text-03: #767676;
+  /* link */
+  --text-link: #003a8a;
+  --text-link-hover: #0055aa;
+  --text-visited: #551a8b;
+  /* bgc */
+  --bgc-primary: #e8e8e8;
+  --bgc-secondary: #ffffff;
+  --bgc-tertiary: #d2e1e2;
+  --bgc-01: #eaeaea;
+  --bgc-02: #ffffff;
+  --bgc-03: #fefefe;
+  --bgc-04: #f3f3f3;
+  --btn-bgc: #eeeeee;
+  --btn-hover: #e3e3e3;
+  --btn-active: #c3c3c3;
+  /* border */
+  --border-primary: #dbdbdb;
+  --border-secondary: #bbbbbb95;
+  /* icon */
+  --icon-bgc: #8fa0ab;
+  --icon-hover-bgc: #d3d3d3;
+  --icon-ctn-hover-bgc: #d3d3d3;
+  /* code */
+  --bgc-pre: #1D2021;
+  --bgc-code: #eaeaea;
+  --text-code: #e8e8e8;
+  /* menu bar */
+  --site-menu-bgc: #FFFFFF;
+  --side-menu-item-tc: rgb(82, 82, 82);
+  --side-item-hover-bgc: rgb(238, 238, 238);
+  --side-item-hover-tc: rgb(84, 84, 84);
+  --side-item-active-bgc: rgb(251, 251, 251);
+  --side-item-active-tc: rgb(69, 69, 69);
+
+  --title-tc-01: #424242;
+  --subtitle-tc-01: #393939;
+
+  --view-bgc-01: #FFFFFF;
+  --view-bgc-02: #FFFFFF;
+
+  --shadow-01: #32323243;
+  --shadow-02: #656565ab;
+  --shadow-03: #3f3f3f88;
+
+  --bg-img-01: url('@/assets/svg/banner-03.svg');
+  /* --bg-img-02: url('@/assets/svg/site-bg.svg'); */
+
+  --linear-01: linear-gradient(270deg, #acacac 0%, #dddddd 50%, #acacac 100%);
+  --linear-02: linear-gradient(90deg, #ffffff 0.00%, #ffffff 100.00%);
+  --linear-03: linear-gradient(132deg, #f8f8f8 0.00%, #f8f8f8 100.00%);
+
+  --banner-linear: linear-gradient(90deg, #9a9a9a 1%, #acacac 1% 6%, #c6c6c6 6% 11%,
+      #e2e2e2 11% 89%, #c6c6c6 89% 94%, #acacac 94% 99%, #9a9a9a 99%);
+
+  --chat-bot-msg-bgc: #fdfdfd;
+  --chat-usr-msg-bgc: #fdfdfd;
+  --chat-left-panel-bgc: #ffffff;
+  --chat-panel-bgc: #FFFFFF;
+  --chat-input-bgc: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  /* background: var(--scroll-track); */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a5a5a5;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9a9a9a;
+}
