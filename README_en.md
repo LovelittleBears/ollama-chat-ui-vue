@@ -4,7 +4,7 @@
 ---
 
 ## ollama-chat-ui-vue
-The front-end chat built with `vue3 + vite + elementUi` can talk to the model through ollama, and currently supports independent thinking and switching models (follow-up support for online queries)
+The front-end chat built with `vue3 + vite + elementUi` can talk to the model through ollama, and now supports `deepseek` independent thinking tags and switching models (follow-up support for online queries)
 
 ## Front-loading work
 Installation `ollama`,[ollama](https://ollama.com/)

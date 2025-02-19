@@ -4,7 +4,8 @@
 ---
 
 ## ollama-chat-ui-vue
-使用`vue3 + vite + elementUi` 搭建的前端chat,通过ollama可与模型对话,目前支持独立思考,切换模型(联网查询后续支持)
+使用`vue3 + vite + elementUi` 搭建的前端chat,通过ollama可与模型对话,目前已经支持`deepseek`的独立思考标签和切换模型(联网查询后续支持)
+
 
 ## 前置工作
 安装`ollama`,[ollama官网地址](https://ollama.com/)
