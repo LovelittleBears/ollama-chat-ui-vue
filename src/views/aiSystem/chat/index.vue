@@ -203,6 +203,8 @@ function modifyPrompt() {
 function clearChatHistory(e) {
   e();
   chatStore.removeChat(agentInfo.value.id);
+  sending.value = false
+  abort()
 }
 
 function inputKeyDown(e) {
