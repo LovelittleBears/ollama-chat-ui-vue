@@ -14,6 +14,13 @@ const dirs = ref([
     classNN: "icon-robot",
     path: "/aiSystem/agent",
   },
+  //测试
+  {
+    id: 2,
+    title: "ai生图",
+    classNN: "icon-robot",
+    path: "/sd/index",
+  },
 ]);
 
 const currentGroup = ref("");

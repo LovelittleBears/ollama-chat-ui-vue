@@ -2,6 +2,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 // 引入组件
 import aiSystem from './routerList/aiSystem/index'
+import sd from './routerList/sd/index'
 
 
 
@@ -13,7 +14,8 @@ const routes = [
         name: 'aiSystem',
         component: aiSystemHome, // 对应的组件
         children: [
-            ...aiSystem
+            ...aiSystem,
+            ...sd,
         ],
     }
 ]
