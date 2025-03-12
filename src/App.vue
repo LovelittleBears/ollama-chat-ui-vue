@@ -1,12 +1,13 @@
-<script setup>
-</script>
+<script setup></script>
 <template>
   <div class="appClass">
     <router-view></router-view>
   </div>
 </template>
-<style scoped>
-.appClass{
+<style lang="scss">
+</style>
+<style>
+.appClass {
   width: 100vw;
   height: 100vh;
 }
