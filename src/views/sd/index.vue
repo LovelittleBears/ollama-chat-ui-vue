@@ -9,6 +9,11 @@ import {
   getLoras,
   refreshLoras,
   lobeConfig,
+  sdModels,
+  //配置
+  sdOptions,
+  //重新加载模型
+  refreshSdModels,
 } from "@/api/sd/index";
 //组件
 import BearForm from "./components/bear-form.vue";
@@ -60,8 +65,11 @@ txt2imgData.value = {
   send_images: true, // 是否发送图像
   save_images: false, // 是否在服务端保存生成的图像
   alwayson_scripts: {}, // alwayson配置
+  //模型
+  model_name: "",
 };
 let img = ref("");
+let imgBox = ref([""]);
 let timer = ref(null);
 let progressNum = ref(0);
 
@@ -72,18 +80,109 @@ const moxingOptions = ref([]);
 //预设风格
 const styleOption = ref([
   {
-    id:1,
+    id: 1,
     name: "写实风格",
   },
   {
-    id:2,
+    id: 2,
     name: "甜美风格",
   },
   {
-    id:3,
+    id: 3,
     name: "性感风格",
   },
-])
+]);
+let samplerList = ref([
+  "DPM++ 2M Karras",
+  "DPM++ SDE Karras",
+  "DPM++ 2M SDE Exponential",
+  "DPM++ 2M SDE Karras",
+  "Euler a",
+  "Euler",
+  "LMS",
+  "Heun",
+  "DPM2",
+  "DPM2 a",
+  "DPM++ 2S a",
+  "DPM++ 2M",
+  "DPM++ SDE",
+  "DPM++ 2M SDE",
+  "DPM++ 2M SDE Heun",
+  "DPM++ 2M SDE Heun Karras",
+  "DPM++ 2M SDE Heun Exponential",
+  "DPM++ 3M SDE",
+  "DPM++ 3M SDE Karras",
+  "DPM++ 3M SDE Exponential",
+  "DPM fast",
+  "DPM adaptive",
+  "LMS Karras",
+  "DPM2 Karras",
+  "DPM2 a Karras",
+  "DPM++ 2S a Karras",
+  "Restart",
+  "DDIM",
+  "PLMS",
+  "UniPC",
+]);
+//采样方法
+const samplerIndexOptions = ref([]);
+//采集
+const samplerIndexFun = () => {
+  samplerList.value.forEach((item) => {
+    samplerIndexOptions.value.push({
+      label: item,
+      value: item,
+    });
+  });
+};
+samplerIndexFun();
+
+//获得模型
+const sdModelsFun = async () => {
+  const response = await sdModels();
+  moxingOptions.value = response.data.map((item) => {
+    return {
+      label: `${item.model_name}.safetensors` ,
+      value: item.title,
+    };
+  });
+  console.log("response", response);
+};
+sdModelsFun();
+//选择模型
+const sdModelsSelectFun = (Mode) => {
+  let obj = moxingOptions.value.find(v => v.value== Mode)
+  txt2imgData.value.model_name = obj.label;
+  // refreshSdModelsFun(e);
+};
+
+//刷新模型 废弃
+const refreshSdModelsFun = async (Mode) => {
+  const data = {
+    prompt: "a girl",
+    negative_prompt: "boy",
+    seed: -1, // 随机种子
+    sampler_name: "",
+    cfg_scale: 7, // 提示词相关性 越大越接近提示词
+    width: 512, // 宽 （注意要被16整除）
+    height: 512, // 高 （注意要被16整除）
+    override_settings: {
+      sd_model_checkpoint: Mode, // 指定大模型
+      sd_vae: "Automatic", // 指定vae 默认自动
+    },
+    override_settings_restore_afterwards: true, // override_settings 是否在之后恢复覆盖的设置 默认是True
+  };
+  const response = await refreshSdModels(data);
+};
+//配置
+const sdOptionsFun = async () => {
+  const response = await sdOptions();
+  console.log("response.sd_model_checkpoint",response)
+  moxing.value = response.data.sd_model_checkpoint
+  let obj = moxingOptions.value.find(v => v.value==  moxing.value)
+  txt2imgData.value.model_name = obj.label;
+};
+sdOptionsFun();
 
 const txt2imgFun = async () => {
   //监控
@@ -99,7 +198,10 @@ const txt2imgFun = async () => {
     try {
       const images = response.data.images;
       if (images.length === 0) return;
-      img.value = images.map((item) => `data:image/png;base64,${item}`);
+      // img.value = images.map((item) => `data:image/png;base64,${item}`);
+      // console.log("----",img.value)
+      imgBox.value = images.map((item) => `data:image/png;base64,${item}`);
+      img.value = imgBox.value[0];
       progressNum.value = 0;
     } catch (err) {
       console.log("err", err);
@@ -129,8 +231,17 @@ const termination = async () => {
 
 //生成数量方法
 const generateQuantityChange = async (value) => {
+  let arr = []
+  for (let i = 0; i < value; i++) {
+    arr.push("")
+  }
+  imgBox.value = arr
   console.log(value);
 };
+//切换图片
+const imgBoxFun = (value)=>{
+  img.value = imgBox.value[value]
+}
 </script>
 <template>
   <div class="sdClassBox">
@@ -158,7 +269,7 @@ const generateQuantityChange = async (value) => {
                 class="input"
                 type="textarea"
                 :rows="6"
-                v-model="txt2imgData.prompt"
+                v-model="txt2imgData.negative_prompt"
                 placeholder="请输入描述词"
               ></el-input>
             </div>
@@ -204,7 +315,12 @@ const generateQuantityChange = async (value) => {
             <el-input type="number" v-model="txt2imgData.seed"></el-input>
           </BearForm>
           <BearForm label="生成模型" class="mb20">
-            <el-select class="select" v-model="moxing" placeholder="请选择模型">
+            <el-select
+              class="select"
+              v-model="moxing"
+              placeholder="请选择模型"
+              @change="sdModelsSelectFun"
+            >
               <el-option
                 v-for="item in moxingOptions"
                 :key="item.value"
@@ -214,11 +330,56 @@ const generateQuantityChange = async (value) => {
               </el-option>
             </el-select>
           </BearForm>
+          <BearForm label="面部修复" class="mb20">
+            <el-switch
+              v-model="txt2imgData.restore_faces"
+              class="ml-2"
+              style="
+                --el-switch-on-color: #13ce66;
+                --el-switch-off-color: #ff4949;
+              "
+            />
+          </BearForm>
+          <BearForm label="开启高清" class="mb20">
+            <el-switch
+              v-model="txt2imgData.enable_hr"
+              class="ml-2"
+              style="
+                --el-switch-on-color: #13ce66;
+                --el-switch-off-color: #ff4949;
+              "
+            />
+          </BearForm>
+          <BearForm label="高清级别" class="mb20">
+            <el-input type="number" v-model="txt2imgData.hr_scale"></el-input>
+          </BearForm>
+          <BearForm label="关键词相关性" class="mb20">
+            <el-input type="number" v-model="txt2imgData.cfg_scale"></el-input>
+          </BearForm>
+          <BearForm label="采样方法" class="mb20">
+            <el-select
+              v-model="txt2imgData.sampler_index"
+              placeholder="Select"
+              size="large"
+              style="width: 240px"
+            >
+              <el-option
+                v-for="item in samplerIndexOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </BearForm>
         </div>
         <!-- 按钮 -->
-        <div class="left-btnBox">
-          <el-button class="generateBtn" type="primary">生成图片</el-button>
-          <el-button class="interruptBtn" type="primary">中断</el-button>
+        <div class="left-btnBox mt30">
+          <el-button class="generateBtn" @click="txt2imgFun" type="primary"
+            >生成图片</el-button
+          >
+          <el-button class="interruptBtn" @click="termination" type="primary"
+            >中断</el-button
+          >
         </div>
       </div>
       <div class="right ml20">
@@ -231,14 +392,19 @@ const generateQuantityChange = async (value) => {
         </div>
         <!-- 图片选择 -->
         <div class="imageSelection mb20">
-          <div class="imageSelection-imgBox"  v-for="(item, index) in 9" :key="index">
-            <el-image class="img " :src="item"> </el-image>
+          <div
+            class="imageSelection-imgBox"
+            v-for="(item, index) in imgBox"
+            :key="index"
+            @click="imgBoxFun(index)"
+          >
+            <el-image class="img" :src="item"> </el-image>
           </div>
         </div>
         <!-- 风格 -->
         <div class="stylePreset mb20">
-          <div class="title  mb10">风格预设</div>
-          <BearCardOptions :option="['1']"></BearCardOptions>
+          <div class="title mb10">风格预设</div>
+          <BearCardOptions :option="styleOption"></BearCardOptions>
         </div>
       </div>
     </div>
@@ -265,12 +431,17 @@ const generateQuantityChange = async (value) => {
   </div>
 </template>
 <style scoped lang="scss">
-@import "@/assets/css/bearCss.css";
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-drag: none;
+  user-select: none;
 }
+@import "@/assets/css/bearCss.css";
 .sdClassBox {
   background: #f9fafb;
 }
@@ -304,16 +475,19 @@ const generateQuantityChange = async (value) => {
     .left-form {
       flex: 1;
       overflow-y: auto;
+      padding-right: 20px;
       .select {
         width: 180px;
       }
     }
     .left-btnBox {
       display: flex;
+
       width: 100%;
       .generateBtn {
         height: 50px;
         background: #6366f1;
+        font-weight: bold;
         flex: 1;
       }
       .generateBtn:hover {
@@ -321,7 +495,9 @@ const generateQuantityChange = async (value) => {
       }
       .interruptBtn {
         height: 50px;
-        background: #f3f4f6;
+        width: 200px;
+        background: #d0d1d4;
+        font-weight: bold;
         color: #4f5966;
         border: none;
       }

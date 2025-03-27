@@ -32,7 +32,7 @@ export const interrogate = async (data) => {
     data,
   });
 }
-//当前配置详情
+//当前电脑配置详情
 export const sysinfoDownload = async (data) => {
   return await service({
     url: "/internal/sysinfo-download",
@@ -40,7 +40,7 @@ export const sysinfoDownload = async (data) => {
     data,
   });
 }
-//获得模型
+//获得小模型
 export const getLoras = async (data) => {
   return await service({
     url: "/sdapi/v1/loras",
@@ -48,7 +48,7 @@ export const getLoras = async (data) => {
     data,
   });
 }
-//刷新模型
+//刷新小模型
 export const refreshLoras = async (data) => {
   return await service({
     url: "/sdapi/v1/refresh-loras",
@@ -64,6 +64,44 @@ export const lobeConfig = async (data) => {
     data,
   });
 }
+//获得大模型
+export const sdModels = async (data) => {
+  return await service({
+    url: "/sdapi/v1/sd-models",
+    method: "get",
+    data,
+  });
+}
+//刷新大模型
+export const refreshSdModels = async (data) => {
+  return await service({
+    url: "/sdapi/v1/refresh-checkpoints",
+    method: "post",
+    data,
+  });
+ 
+}
+//获得配置
+export const sdOptions = async (data) => {
+  return await service({
+    url: "/sdapi/v1/options",
+    method: "get",
+    data,
+  });
+}
+
+
+
+// 获得 大模型 Vaes
+// export const sdVae = async (data) => {
+//   return await service({
+//     url: "/sdapi/v1/sd-vae",
+//     method: "get",
+//     data,
+//   });
+// }
+
+
 //文字生成图片 fetch
 // export const txt2imgFetch = (data) => {
 //   fetchService('/sdapi/v1/txt2img',{

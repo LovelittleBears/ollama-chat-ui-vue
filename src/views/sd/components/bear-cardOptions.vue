@@ -12,7 +12,7 @@ const cardOptionsFun = (e) => {
 </script>
 <template>
   <div class="bear-cardOptions">
-    <div class="bear-cardOptions-box" v-if="option.length == 0 || !option">
+    <div class="bear-cardOptions-box" v-if="option.length != 0">
       <div
         class="bear-cardOptions-content"
         @click="cardOptionsFun(index)"
@@ -32,7 +32,7 @@ const cardOptionsFun = (e) => {
         </div>
       </div>
     </div>
-    <div class="bear-cardOptions-blank">
+    <div class="bear-cardOptions-blank" v-else>
         <div>
             暂无预设
         </div>
