@@ -1,5 +1,5 @@
 import { Ollama } from "ollama/browser";
-const ollama = new Ollama({ host: 'http://127.0.0.1:11434' })
+const ollama = new Ollama({ host: "http://127.0.0.1:11434" });
 export function chatWithHistory(model, userMsg, history, systemMsg) {
   return ollama.chat({
     model,
@@ -9,6 +9,14 @@ export function chatWithHistory(model, userMsg, history, systemMsg) {
       { role: "user", content: userMsg },
     ],
     stream: true,
+  });
+}
+
+export function translateChat(model, prompt) {
+  return ollama.generate({
+    model,
+    prompt,
+    stream: false,
   });
 }
 

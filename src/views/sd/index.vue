@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRaw } from "vue";
+import { ref, toRaw, onMounted, nextTick } from "vue";
 import {
   txt2img,
   progress,
@@ -15,6 +15,8 @@ import {
   //重新加载模型
   refreshSdModels,
 } from "@/api/sd/index";
+//ollama
+import { translateChat, listModels } from "@/api/aiSystem/ollama";
 //组件
 import BearForm from "./components/bear-form.vue";
 import BearCardOptions from "./components/bear-cardOptions.vue";
@@ -42,7 +44,7 @@ txt2imgData.value = {
   sampler_name: "",
   batch_size: 1, // 每次生成的张数
   n_iter: 1, // 生成批次
-  steps: 50, // 生成步数
+  steps: 20, // 生成步数
   cfg_scale: 7, // 关键词相关性
   width: 512, // 生成图像宽度
   height: 512, // 生成图像高度
@@ -60,7 +62,7 @@ txt2imgData.value = {
   override_settings: {}, // 覆盖性配置
   override_settings_restore_afterwards: true,
   script_args: [], // lora 模型参数配置
-  sampler_index: "Euler", // 采样方法
+  sampler_index: "DPM++ 2M Karras", // 采样方法
   script_name: "",
   send_images: true, // 是否发送图像
   save_images: false, // 是否在服务端保存生成的图像
@@ -70,12 +72,16 @@ txt2imgData.value = {
 };
 let img = ref("");
 let imgBox = ref([""]);
+let imgIndex = ref(0);
 let timer = ref(null);
 let progressNum = ref(0);
 
 //模型
 const moxing = ref("");
 const moxingOptions = ref([]);
+
+//ollama 模型
+const ollamaModel = ref("qwen2.5:1.5b");
 
 //预设风格
 const styleOption = ref([
@@ -135,23 +141,21 @@ const samplerIndexFun = () => {
     });
   });
 };
-samplerIndexFun();
 
 //获得模型
 const sdModelsFun = async () => {
   const response = await sdModels();
   moxingOptions.value = response.data.map((item) => {
     return {
-      label: `${item.model_name}.safetensors` ,
+      label: `${item.model_name}.safetensors`,
       value: item.title,
     };
   });
   console.log("response", response);
 };
-sdModelsFun();
 //选择模型
 const sdModelsSelectFun = (Mode) => {
-  let obj = moxingOptions.value.find(v => v.value== Mode)
+  let obj = moxingOptions.value.find((v) => v.value == Mode);
   txt2imgData.value.model_name = obj.label;
   // refreshSdModelsFun(e);
 };
@@ -177,14 +181,22 @@ const refreshSdModelsFun = async (Mode) => {
 //配置
 const sdOptionsFun = async () => {
   const response = await sdOptions();
-  console.log("response.sd_model_checkpoint",response)
-  moxing.value = response.data.sd_model_checkpoint
-  let obj = moxingOptions.value.find(v => v.value==  moxing.value)
+  console.log("response.sd_model_checkpoint", response);
+
+  moxing.value = response.data.sd_model_checkpoint;
+  let obj = moxingOptions.value.find((v) => v.value == moxing.value);
   txt2imgData.value.model_name = obj.label;
 };
-sdOptionsFun();
 
 const txt2imgFun = async () => {
+  //图片占位
+  let arr = [];
+  for (let i = 0; i < txt2imgData.value.batch_size; i++) {
+    arr.push("");
+  }
+  imgBox.value = arr;
+  img.value = "";
+
   //监控
   timer.value = setInterval(async () => {
     let { data } = await progress();
@@ -194,6 +206,7 @@ const txt2imgFun = async () => {
   const response = await txt2img(txt2imgData.value);
   //终止
   clearInterval(timer.value);
+  imgIndex.value = 0;
   if (response.status === 200 && response.data) {
     try {
       const images = response.data.images;
@@ -212,12 +225,11 @@ const txt2imgFun = async () => {
 const sysinfoDownloadFun = async () => {
   await sysinfoDownload();
 };
-sysinfoDownloadFun();
 
 //获得模型
 const getLorasFun = async () => {
   await getLoras();
-  await lobeConfig();
+  // await lobeConfig();
 };
 getLorasFun();
 //刷新模型
@@ -229,19 +241,44 @@ const termination = async () => {
   await interrupt();
 };
 
-//生成数量方法
+//生成数量方法  废弃
 const generateQuantityChange = async (value) => {
-  let arr = []
+  let arr = [];
   for (let i = 0; i < value; i++) {
-    arr.push("")
+    arr.push("");
   }
-  imgBox.value = arr
-  console.log(value);
+  imgBox.value = arr;
 };
 //切换图片
-const imgBoxFun = (value)=>{
-  img.value = imgBox.value[value]
-}
+const imgBoxFun = (value) => {
+  img.value = imgBox.value[value];
+  imgIndex.value = value;
+};
+//调用ollama模型 舍弃
+const listModelsFun = async () => {
+  const response = await listModels();
+  console.log(response);
+  if (response && response.length > 0) {
+    ollamaModel.value = response[0].model;
+  }
+};
+//翻译
+const translateBtn = async (e) => {
+  let prompt =
+    txt2imgData.value[e] +
+    ",以上文字翻译成英文,只显示对应的英文,不要显示多余的英文";
+  const response = await translateChat(ollamaModel.value, prompt);
+  txt2imgData.value[e] = response.response;
+};
+
+onMounted(async () => {
+  await samplerIndexFun();
+  await sysinfoDownloadFun();
+  await sdModelsFun();
+  await sdOptionsFun();
+  //舍弃
+  // await listModelsFun();
+});
 </script>
 <template>
   <div class="sdClassBox">
@@ -250,7 +287,17 @@ const imgBoxFun = (value)=>{
         <div class="left-top mb20">
           <!-- 正面描述词 -->
           <div class="front mb20">
-            <div class="title mb10">正面提示词</div>
+            <div class="title mb10 titleBox">
+              <div>正面提示词</div>
+              <div>
+                <el-button
+                  type="primary"
+                  class="btn"
+                  @click="translateBtn('prompt')"
+                  >翻译</el-button
+                >
+              </div>
+            </div>
             <div class="inputBox">
               <el-input
                 class="input"
@@ -263,7 +310,17 @@ const imgBoxFun = (value)=>{
           </div>
           <!-- 负面描述词 -->
           <div class="front">
-            <div class="title mb10">负面提示词</div>
+            <div class="title mb10 titleBox">
+              <div>负面提示词</div>
+              <div>
+                <el-button
+                  type="primary"
+                  class="btn"
+                  @click="translateBtn('negative_prompt')"
+                  >翻译</el-button
+                >
+              </div>
+            </div>
             <div class="inputBox">
               <el-input
                 class="input"
@@ -299,7 +356,6 @@ const imgBoxFun = (value)=>{
           <BearForm label="生成数量" class="mb20">
             <el-input-number
               v-model="txt2imgData.batch_size"
-              @change="generateQuantityChange"
               :min="1"
               :max="10"
               label="生成数量"
@@ -385,7 +441,13 @@ const imgBoxFun = (value)=>{
       <div class="right ml20">
         <!-- 生成主图片 -->
         <div class="right-imgBox mb10">
-          <el-image class="img" :src="img"> </el-image>
+          <el-image
+            class="img"
+            :src="img"
+            :preview-src-list="imgBox"
+            :initial-index="imgIndex"
+          >
+          </el-image>
           <div class="progressBar">
             <div class="progress" :style="{ width: `${progressNum}%` }"></div>
           </div>
@@ -560,6 +622,14 @@ const imgBoxFun = (value)=>{
   align-items: center;
   .input {
     width: 80px;
+  }
+}
+.titleBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .btn {
+    padding: 10px 10px;
   }
 }
 </style>
